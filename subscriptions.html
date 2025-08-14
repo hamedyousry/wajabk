@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mr-Hamed Yosry">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content=" واجبك ">
+  <meta property="og:description" content="نظام إدارة المستخدمين بسهولة وفعالية">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/1pfADEnGklJi0anW7xGBMLWCRUQ34SvMj=w1200">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_AR">
+
+
+  <!-- Favicon -->
+  <link rel="icon" href="poto/3.png" type="image/png">
+
+  <title>خطط الاشتراك - كورس الأبطال</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style/subscriptions.css">
+</head>
+<body class="dark-mode">
+  <button class="theme-toggle" id="theme-toggle" aria-label="تبديل الوضع">
+    <i class="fa-regular fa-sun-bright fa-spin"></i>
+  </button>
+  <div class="container">
+    <h2>خطط الاشتراك</h2>
+    <div class="current-plan" id="current-plan">
+      <h3 id="current-plan-title">الباقة الحالية: <span id="current-plan-name">تجربة مجانية</span></h3>
+      <p>عدد الطلاب المسموح به: <span id="current-max-students">4</span> طلاب</p>
+      <p class="expiry">تنتهي في: <span id="current-expiry-date">2023-12-31</span></p>
+    </div>
+
+    <!-- تجديد الباقة -->
+    <div class="plans-container">
+      <div class="plan-section">
+        <h3>تجديد الباقة الحالية</h3>
+        <div class="plans">
+          <div class="plan" onclick="selectPlan(this, 'renew-monthly', 30, 20, 60)" role="button" tabindex="0">
+            <h4>تجديد شهري</h4>
+            <div class="price">60 جنيه</div>
+            <small>تمديد الباقة الحالية لمدة شهر</small>
+            <ul class="features">
+              <li>✅ حتى <strong>20 طالبًا</strong></li>
+              <li>✅ إدارة كاملة للمستخدمين</li>
+              <li>✅ إرسال واجبات ومحاضرات</li>
+              <li>✅ تصدير البيانات (Excel)</li>
+              <li>✅ دعم فني أساسي</li>
+              <li>✅ إشعارات واتساب تلقائية</li>
+            </ul>
+            <button class="btn">تجديد الآن</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- الترقية إلى باقة أعلى -->
+      <div class="plan-section">
+        <h3>الترقية إلى باقة أعلى</h3>
+        <div class="plans">
+          <div class="plan" onclick="selectPlan(this, 'upgrade-yearly', 365, 100, 1800)" role="button" tabindex="0">
+            <div class="save-badge">وفر 50%</div>
+            <h4>اشتراك سنوي</h4>
+            <div class="price">1800 جنيه</div>
+            <small>مثالي للمدربين والمعاهد</small>
+            <ul class="features">
+              <li>✅ حتى <strong>100 طالب</strong></li>
+              <li>✅ إدارة متقدمة للمستخدمين</li>
+              <li>✅ إرسال تلقائي للواجبات</li>
+              <li>✅ تصدير ونسخ احتياطي تلقائي</li>
+              <li>✅ دعم فني مميز (24/7)</li>
+              <li>✅ إشعارات متقدمة (واتساب + إيميل)</li>
+              <li>✅ تقارير أداء شهرية</li>
+              <li>✅ اسم نطاق فرعي (mymedcourse.com/yourname)</li>
+            </ul>
+            <button class="btn">الترقية الآن</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- باقات مخصصة -->
+      <div class="plan-section">
+        <h3>باقات مخصصة</h3>
+        <div class="plans">
+          <!-- باقة حسب الطلب -->
+          <div class="plan" role="region">
+            <div class="custom-badge">مخصص</div>
+            <h4>باقة حسب الطلب</h4>
+            <div class="price" id="custom-price">0 جنيه</div>
+            <small>اختر ما يناسب احتياجاتك</small>
+            <div class="custom-plan-form">
+              <div class="form-group">
+                <label for="custom-students">عدد الطلاب</label>
+                <input type="number" id="custom-students" min="5" max="1000" value="20" onchange="calculateCustomPrice()">
+                <p class="error-message" id="custom-students-error">يجب أن يكون بين 5 و1000 طالب</p>
+              </div>
+
+              <div class="form-group">
+                <label for="custom-period">مدة الاشتراك</label>
+                <select id="custom-period" onchange="handlePeriodChange()">
+                  <option value="30">شهر واحد (30 يوم)</option>
+                  <option value="90">3 شهور (90 يوم)</option>
+                  <option value="180">6 شهور (180 يوم)</option>
+                  <option value="365">سنة كاملة (365 يوم) - خصم 50%</option>
+                  <option value="custom">أدخل عدد الأيام يدويًا</option>
+                </select>
+              </div>
+
+              <div class="form-group" id="custom-days-input" style="display: none;">
+                <label for="custom-days">عدد الأيام (7 إلى 365)</label>
+                <input type="number" id="custom-days" min="7" max="365" value="30" oninput="calculateCustomPrice()">
+                <p class="error-message" id="custom-days-error">يجب أن يكون بين 7 و365 يوم</p>
+              </div>
+            </div>
+            <button class="btn" onclick="selectCustomPlan()">إنشاء الباقة</button>
+          </div>
+
+          <!-- باقة 20 طالب -->
+          <div class="plan" onclick="selectPlan(this, 'custom-20', 30, 20, 60)" role="button" tabindex="0">
+            <div class="custom-badge">شائع</div>
+            <h4>باقة 20 طالب</h4>
+            <div class="price">60 جنيه</div>
+            <small>لمدة 30 يوم</small>
+            <ul class="features">
+              <li>✅ حتى <strong>20 طالبًا</strong></li>
+              <li>✅ إدارة كاملة للمستخدمين</li>
+              <li>✅ إرسال واجبات ومحاضرات</li>
+              <li>✅ تصدير البيانات (Excel)</li>
+              <li>✅ دعم فني أساسي</li>
+            </ul>
+            <button class="btn">اختيار الباقة</button>
+          </div>
+
+          <!-- باقة 50 طالب -->
+          <div class="plan" onclick="selectPlan(this, 'custom-50', 30, 50, 150)" role="button" tabindex="0">
+            <div class="custom-badge">شائع</div>
+            <h4>باقة 50 طالب</h4>
+            <div class="price">150 جنيه</div>
+            <small>لمدة 30 يوم</small>
+            <ul class="features">
+              <li>✅ حتى <strong>50 طالبًا</strong></li>
+              <li>✅ إدارة متقدمة للمستخدمين</li>
+              <li>✅ إرسال واجبات ومحاضرات</li>
+              <li>✅ تصدير البيانات (Excel)</li>
+              <li>✅ دعم فني أساسي</li>
+              <li>✅ إشعارات واتساب تلقائية</li>
+            </ul>
+            <button class="btn">اختيار الباقة</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- تفاصيل الدفع -->
+    <div id="payment-details" class="payment-details">
+      <p id="selected-plan-info">لم يتم اختيار باقة بعد</p>
+      <strong>طريقة الدفع: فودافون كاش</strong><br>
+      <strong>رقم الحساب:</strong> +201091528121<br>
+      <strong>الاسم:</strong> Mr.Hamed Yosry<br>
+      <small>احفظ الرقم وأرسل صورة التحويل بعد الدفع.</small>
+    </div>
+
+    <!-- نافذة التأكيد -->
+    <div class="payment-modal" id="payment-modal">
+      <div class="payment-box">
+        <h3>تفعيل الحساب</h3>
+        <p id="payment-plan-info">الباقة المختارة: غير محدد - 0 جنيه</p>
+        <p>أدخل رقم عملية الدفع (رقم التحويل) من فودافون كاش</p>
+        <div class="form-group">
+          <label for="payment-code">رقم التحويل (8-12 رقمًا)</label>
+          <input type="text" id="payment-code" placeholder="1234 5678 9012" maxlength="14" inputmode="numeric">
+          <p id="payment-error" class="payment-error"></p>
+        </div>
+        <button class="btn" id="verify-btn" onclick="verifyPayment()">تأكيد</button>
+        <button class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+        <button class="btn btn-secondary" id="support-btn" style="display:none;" onclick="contactSupport()">تواصل مع الدعم</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="script/subscriptions.js"></script>
+</body>
+</html>

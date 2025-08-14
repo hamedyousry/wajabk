@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Mr-Hamed Yosry">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content=" واجبك ">
+  <meta property="og:description" content="نظام إدارة المستخدمين بسهولة وفعالية">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/1pfADEnGklJi0anW7xGBMLWCRUQ34SvMj=w1200">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_AR">
+
+  <!-- Favicon -->
+  <link rel="icon" href="poto/3.png" type="image/png">
+
+  <title>نظام إدارة الطلاب</title>
+  
+  <!-- منع التخزين المؤقت (مهم لمنع العودة التلقائية بعد الخروج) -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+  <!-- خطوط Google -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="style/view-users.css">
+</head>
+
+<body>
+  <!-- الشريط العلوي -->
+  <div class="navbar">
+    <div class="navbar-container">
+      <button class="hamburger" onclick="toggleNav()">☰</button>
+      <div class="navbar-links" id="navbarLinks">
+        <a href="user-naw.html">الرئيسية</a>
+        <a href="view-users.html" class="active">ادارة المستخدمين</a>
+        <a href="uu.html">اضافة الواجبات</a>
+        <a href="word.html">اضافة الاسئلة وورد</a>
+        <a href="manage_lectures_and_questions.html">عرض المحاضرات وتعديلها</a>
+        <a href="send_lecture.html">ارسال الواجب</a>
+        <a href="h.html">معاينة الواجب</a>
+        <a href="subscriptions.html">تجديد الاشتراك</a>
+        <a href="bot.html">بوت الطلاب</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="profaul.html" class="user-icon">
+          <i class="fa-solid fa-circle-user fa-bounce"></i>
+        </a>
+        <button class="theme-toggle-btn" onclick="toggleTheme()">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-text">الوضع الليلي</span>
+        </button>
+        <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة الاشتراك -->
+  <div id="subscription-block">
+    <h2>❌ انتهت صلاحية اشتراكك</h2>
+    <p>للأسف، انتهت الفترة التجريبية أو اشتراكك.</p>
+    <p>للاستمرار في استخدام الكورس، يرجى تجديد الاشتراك.</p>
+    <button class="renew-btn" onclick="renewSubscription()">تجديد الاشتراك</button>
+  </div>
+
+  <!-- المحتوى الرئيسي -->
+  <div class="main-content">
+    <div class="search-bar">
+      <input type="text" class="search-input" placeholder="ابحث عن طالب..." id="search-input" />
+      <button class="search-btn" onclick="searchStudents()">بحث</button>
+    </div>
+
+    <div class="container">
+      <h1>📋 عرض بيانات المستخدمين</h1>
+
+      <div class="profile-header">
+        <div class="profile-info">
+          <div class="info-item">
+            <span class="info-label">عدد الطلاب (جميع الفرق)</span>
+            <span id="total-students" class="info-value">0</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">الحد الأقصى</span>
+            <span id="max-students" class="info-value">0</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="openAddModal()">➕ إضافة طالب جديد</button>
+          <button class="btn btn-primary" onclick="openAddGroupModal()">➕ إضافة مجموعة جديدة</button>
+        </div>
+      </div>
+
+      <!-- اختيار الفرقة -->
+      <div class="group-selector">
+        <button class="group-btn active" onclick="changeGroup('الفرقة الأولى')">الفرقة الأولى</button>
+        <button class="group-btn" onclick="changeGroup('الفرقة الثانية')">الفرقة الثانية</button>
+        <button class="group-btn" onclick="changeGroup('الفرقة الثالثة')">الفرقة الثالثة</button>
+        <button class="group-btn" onclick="changeGroup('الفرقة الرابعة')">الفرقة الرابعة</button>
+      </div>
+
+      <!-- اختيار المجموعة الفرعية -->
+      <div id="subgroup-selector" class="group-selector" style="display: none;"></div>
+
+      <!-- الجدول -->
+      <div class="table-container">
+        <table id="students-table">
+          <thead>
+            <tr>
+              <th>م</th>
+              <th>ID</th>
+              <th>اسم الطالب</th>
+              <th>اسم المستخدم</th>
+              <th>رقم الطالب</th>
+              <th>رقم ولي الأمر</th>
+              <th>الفرقة</th>
+              <th>المجموعة</th>
+              <th>الحالة</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة إضافة طالب -->
+  <div id="add-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">➕ إضافة طالب جديد</h3>
+        <button class="close-btn" onclick="closeAddModal()">&times;</button>
+      </div>
+      <form id="add-form" onsubmit="addStudent(event)">
+        <div class="form-group">
+          <label>اسم الطالب</label>
+          <input type="text" class="form-control" id="student-name" required />
+        </div>
+        <div class="form-group">
+          <label>اسم المستخدم</label>
+          <input type="text" class="form-control" id="student-username" />
+        </div>
+        <div class="form-group">
+          <label>رقم الطالب</label>
+          <input type="text" class="form-control" id="student-phone" required />
+        </div>
+        <div class="form-group">
+          <label>رقم ولي الأمر</label>
+          <input type="text" class="form-control" id="parent-phone" required />
+        </div>
+        <div class="form-group">
+          <label>الفرقة</label>
+          <select class="form-select" id="student-group" required onchange="updateSubgroupOptions()">
+            <option value="الفرقة الأولى">الفرقة الأولى</option>
+            <option value="الفرقة الثانية">الفرقة الثانية</option>
+            <option value="الفرقة الثالثة">الفرقة الثالثة</option>
+            <option value="الفرقة الرابعة">الفرقة الرابعة</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>اختر المجموعة</label>
+          <select class="form-select" id="student-subgroup" onchange="handleSubgroupChange()">
+            <option value="">اختر مجموعة...</option>
+            <option value="new_group">➕ إضافة مجموعة جديدة</option>
+          </select>
+        </div>
+        <div class="form-group" id="new-group-input" style="display: none;">
+          <label>اسم المجموعة الجديدة</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" class="form-control" id="new-group-name" placeholder="اكتب اسم المجموعة" />
+            <button type="button" class="btn btn-primary" onclick="addNewGroup()" style="white-space: nowrap;">حفظ</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>الحالة</label>
+          <select class="form-select" id="student-status" required>
+            <option value="approved">مقبول</option>
+            <option value="pending">قيد الانتظار</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">إضافة الطالب</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- نافذة إضافة مجموعة جديدة -->
+  <div id="add-group-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">➕ إضافة مجموعة جديدة</h3>
+        <button class="close-btn" onclick="closeAddGroupModal()">&times;</button>
+      </div>
+      <div class="form-group">
+        <label>اختر الفرقة</label>
+        <select class="form-select" id="group-level-select" required onchange="enableGroupNameInput()">
+          <option value="">اختر فرقة...</option>
+          <option value="الفرقة الأولى">الفرقة الأولى</option>
+          <option value="الفرقة الثانية">الفرقة الثانية</option>
+          <option value="الفرقة الثالثة">الفرقة الثالثة</option>
+          <option value="الفرقة الرابعة">الفرقة الرابعة</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>اسم المجموعة الجديدة</label>
+        <input type="text" class="form-control" id="new-group-name-modal" placeholder="اكتب اسم المجموعة" disabled />
+      </div>
+      <button type="button" class="btn btn-primary btn-block" onclick="addNewGroupFromModal()">إضافة المجموعة</button>
+    </div>
+  </div>
+
+  <!-- زر الإشعارات -->
+  <div class="notification-container">
+    <button class="notification-bell" onclick="toggleNotifications()">
+      <i class="fas fa-bell"></i>
+      <span class="notification-badge" id="notification-count">0</span>
+    </button>
+    <div class="notification-box" id="notification-box">
+      <div class="notification-header">
+        <span>الإشعارات</span>
+        <button class="clear-all-btn" onclick="clearAllNotifications()">مسح الكل</button>
+      </div>
+      <div id="notification-list"></div>
+    </div>
+  </div>
+
+  <!-- رسالة التحذير -->
+  <div id="warning-message" class="warning-message" style="display: none;">
+    <i class="fas fa-exclamation-triangle"></i>
+    <span id="warning-text"></span>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="script/view-users.js"></script>
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="نظام إدارة المستخدمين - واجبك">
+  <meta name="author" content="Mr-Hamed Yosry">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content=" واجبك ">
+  <meta property="og:description" content="نظام إدارة المستخدمين بسهولة وفعالية">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/1pfADEnGklJi0anW7xGBMLWCRUQ34SvMj=w1200">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_AR">
+
+  <!-- Website Title -->
+  <title>Wajabk</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="poto/3.png" type="image/png">
+
+  <!-- خطوط وأيقونات -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style/user-naw.css">
+
+  <style>
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: #333;
+    }
+
+    .close-btn {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      color: black;
+    }
+
+    .modal-body {
+      margin-bottom: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #45a049;
+    }
+
+    .btn-secondary {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background-color: #d32f2f;
+    }
+
+    .add-group-btn {
+      background-color: #2196F3;
+      color: white;
+    }
+
+    .add-group-btn:hover {
+      background-color: #0b7dda;
+    }
+
+    /* Dark mode styles */
+    .dark-mode .modal-content {
+      background-color: #333;
+      color: #fff;
+      border-color: #444;
+    }
+
+    .dark-mode .modal-header h2 {
+      color: #fff;
+    }
+
+    .dark-mode .close-btn {
+      color: #bbb;
+    }
+
+    .dark-mode .close-btn:hover {
+      color: #fff;
+    }
+
+    .dark-mode .form-group input, 
+    .dark-mode .form-group select {
+      background-color: #444;
+      color: #fff;
+      border-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <!-- الشريط العلوي -->
+  <div class="navbar">
+    <div class="navbar-container">
+      <button class="hamburger" onclick="toggleNav()">☰</button>
+      <div class="navbar-links" id="navbarLinks">
+        <a href="user-naw.html">الرئيسية</a>
+        <a href="view-users.html">ادارة المستخدمين</a>
+        <a href="uu.html">اضافة الواجبات</a>
+        <a href="word.html">اضافة الاسئلة وورد</a>
+        <a href="manage_lectures_and_questions.html">عرض المحاضرات وتعديلها</a>
+        <a href="send_lecture.html">ارسال الواجب</a>
+        <a href="h.html">معاينة الواجب</a>
+        <a href="subscriptions.html">تجديد الاشتراك</a>
+        <a href="bot.html">بوت الطلاب</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="profaul.html" class="user-icon">
+          <i class="fa-solid fa-circle-user fa-bounce"></i>
+        </a>
+        <button class="theme-toggle-btn" onclick="toggleTheme()">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-text">الوضع الليلي</span>
+        </button>
+        <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- زر الإشعارات -->
+  <div class="notification-container">
+    <button class="notification-bell" onclick="toggleNotifications()">
+      🔔
+      <span class="notification-badge" id="notification-count">0</span>
+    </button>
+    <div class="notification-box" id="notification-box">
+      <div class="notification-header">
+        <span>الإشعارات</span>
+        <button class="clear-all-btn" onclick="clearAllNotifications()">مسح الكل</button>
+      </div>
+      <div id="notification-list"></div>
+    </div>
+  </div>
+
+  <!-- نافذة الاشتراك -->
+  <div id="subscription-block">
+    <h2>❌ انتهت صلاحية اشتراكك</h2>
+    <p>للأسف، انتهت الفترة التجريبية أو اشتراكك.</p>
+    <p>للاستمرار في استخدام الكورس، يرجى تجديد الاشتراك.</p>
+    <button class="renew-btn" onclick="renewSubscription()">تجديد الاشتراك</button>
+  </div>
+
+  <!-- المحتوى الرئيسي -->
+  <div class="container">
+    <h1>قائمة المستخدمين الجدد</h1>
+    <div class="actions">
+      <button class="btn export-btn" onclick="exportToExcel()" disabled>تصدير إلى Excel</button>
+      <button class="btn whatsapp-btn" onclick="sendToWhatsApp()">واتساب</button>
+      <button class="btn copy-btn" onclick="copyAllNumbers()">نسخ الأرقام</button>
+      <button class="btn add-group-btn" onclick="openModal()">إضافة مجموعة</button>
+    </div>
+    <div class="loader">جارٍ التحميل...</div>
+    <div class="table-container">
+      <table id="users-table">
+        <thead>
+          <tr>
+            <th>م</th>
+            <th>الاسم</th>
+            <th>اسم المستخدم</th>
+            <th>رقم الطالب</th>
+            <th>رقم ولي الأمر</th>
+            <th>الفرقة</th>
+            <th>الحالة</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal for adding groups -->
+  <div id="groupModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>إضافة مجموعة جديدة</h2>
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="selectedLevel">اختر الفرقة:</label>
+          <select id="selectedLevel" class="form-control">
+            <option value="الفرقة الأولى">الفرقة الأولى</option>
+            <option value="الفرقة الثانية">الفرقة الثانية</option>
+            <option value="الفرقة الثالثة">الفرقة الثالثة</option>
+            <option value="الفرقة الرابعة">الفرقة الرابعة</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="groupName">اسم المجموعة:</label>
+          <input type="text" id="groupName" placeholder="أدخل اسم المجموعة">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+        <button class="btn btn-primary" onclick="addGroup()">حفظ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <!-- مكتبة Excel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="script/user-naw.js"></script>
+
+  <script>
+    // --- دوال البوكس المنبثق لإضافة المجموعات ---
+    function openModal() {
+      document.getElementById('groupModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('groupModal').style.display = 'none';
+      document.getElementById('groupName').value = '';
+    }
+
+    function addGroup() {
+      const level = document.getElementById('selectedLevel').value;
+      const groupName = document.getElementById('groupName').value.trim();
+      
+      if (!groupName) {
+        alert('الرجاء إدخال اسم المجموعة');
+        return;
+      }
+      
+      if (!currentUser) {
+        alert('يجب تسجيل الدخول أولاً');
+        return;
+      }
+      
+      const tenantId = currentUser.uid;
+      const newGroupRef = db.ref(`tenants/${tenantId}/student_groups_by_level/${level}`).push();
+      
+      newGroupRef.set(groupName)
+        .then(() => {
+          alert('تمت إضافة المجموعة بنجاح');
+          closeModal();
+        })
+        .catch(error => {
+          console.error('Error adding group:', error);
+          alert('حدث خطأ أثناء إضافة المجموعة');
+        });
+    }
+
+    // دالة للتحقق من الدخول الأول وعرض المودال
+    function checkFirstLogin() {
+      // التحقق مما إذا كان المستخدم قد دخل من قبل
+      if (!localStorage.getItem('hasVisitedBefore')) {
+        // عرض نافذة إضافة المجموعة
+        openModal();
+        
+        // تعيين علامة أن المستخدم قد زار الموقع
+        localStorage.setItem('hasVisitedBefore', 'true');
+      }
+    }
+
+    // Close modal when clicking outside of it
+    window.onclick = function(event) {
+      const modal = document.getElementById('groupModal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      checkFirstLogin();
+    });
+
+    window.addEventListener('beforeunload', stopListeningToNotifications);
+  </script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mr-Hamed Yosry">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content=" واجبك ">
+  <meta property="og:description" content="نظام إدارة المستخدمين بسهولة وفعالية">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/1pfADEnGklJi0anW7xGBMLWCRUQ34SvMj=w1200">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_AR">
+
+  <!-- Website Title -->
+  <title>Wajabk</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="poto/3.png" type="image/png">
+
+  <title>متابعة إجابات الطلاب</title>
+  <!-- خطوط وأيقونات -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style/h.css">
+</head>
+<body>
+  <!-- الشريط العلوي -->
+  <div class="navbar">
+    <div class="navbar-container">
+      <button class="hamburger" onclick="toggleNav()">☰</button>
+      <div class="navbar-links" id="navbarLinks">
+        <a href="user-naw.html">الرئيسية</a>
+        <a href="view-users.html" >ادارة المستخدمين</a>
+        <a href="uu.html">اضافة الواجبات</a>
+        <a href="word.html">اضافة الاسئلة وورد</a>
+        <a href="manage_lectures_and_questions.html">عرض المحاضرات وتعديلها</a>
+        <a href="send_lecture.html">ارسال الواجب</a>
+        <a href="h.html"class="active">معاينة الواجب</a>
+        <a href="subscriptions.html">تجديد الاشتراك </a>
+        <a href="bot.html">بوت الطلاب</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="profaul.html" class="user-icon">
+          <i class="fa-solid fa-circle-user fa-bounce"></i>
+        </a>
+        <button class="theme-toggle-btn" onclick="toggleTheme()">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-text">الوضع الليلي</span>
+        </button>
+        <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+      </div>
+    </div>
+  </div>
+  <!-- زر الإشعارات -->
+  <div class="notification-container">
+    <button class="notification-bell" onclick="toggleNotifications()">
+      🔔
+      <span class="notification-badge" id="notification-count">0</span>
+    </button>
+    <div class="notification-box" id="notification-box">
+      <div class="notification-header">
+        <span>الإشعارات</span>
+        <button class="clear-all-btn" onclick="clearAllNotifications()">مسح الكل</button>
+      </div>
+      <div id="notification-list"></div>
+    </div>
+  </div>
+  <!-- نافذة الاشتراك -->
+  <div id="subscription-block" style="display: none; text-align: center; padding: 2rem; background: #fff8e1; border-radius: 1rem; margin: 2rem auto; max-width: 500px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+    <h2>❌ انتهت صلاحية اشتراكك</h2>
+    <p>للأسف، انتهت الفترة التجريبية أو اشتراكك.</p>
+    <p>للاستمرار في استخدام الكورس، يرجى تجديد الاشتراك.</p>
+    <button class="renew-btn" style="background: #FF9800; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 2rem; font-weight: 600; cursor: pointer; margin-top: 1rem;" onclick="renewSubscription()">تجديد الاشتراك</button>
+  </div>
+  <!-- المحتوى الرئيسي -->
+  <div class="container">
+    <h1>متابعة إجابات الطلاب</h1>
+    <!-- اختيار الفرقة -->
+    <div class="select-group">
+      <h3>اختر الفرقة:</h3>
+      <div id="groupsButtons" class="buttons-container">
+        <div class="loader">جاري تحميل الفرق...</div>
+      </div>
+    </div>
+
+    <!-- اختيار المجموعة الفرعية -->
+    <div id="groupsSelector" style="display: none;">
+      <h3>اختر المجموعة الفرعية:</h3>
+      <div id="subGroupsButtons" class="buttons-container">
+        <div class="loader">جاري تحميل المجموعات...</div>
+      </div>
+    </div>
+
+    <!-- قسم المحاضرات -->
+    <div id="lecturesSection" style="display: none;">
+      <h2>اختر المحاضرة</h2>
+      <div class="table-container">
+        <table id="lectures-table">
+          <thead>
+            <tr>
+              <th>م</th>
+              <th>عنوان المحاضرة</th>
+              <th>عدد الأسئلة</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="lecturesTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- قسم الطلاب -->
+    <div id="studentsSection" style="display: none;">
+      <h2 id="lectureTitle">طلاب محاضرة: [غير معروف]</h2>
+      <div class="filter-buttons">
+        <button class="btn" style="background:#00D68F;" onclick="filterStudents('submitted')">الذين أجابوا ✅</button>
+        <button class="btn" style="background:#FF9800;" onclick="filterStudents('pending')">لم يجيبوا بعد ⏳</button>
+        <button class="btn" style="background:#6c757d;" onclick="filterStudents('all')">إظهار الكل</button>
+      </div>
+      <div class="actions">
+        <button class="btn export-btn" onclick="exportAnswersToExcel()">تصدير إلى Excel</button>
+        <button class="btn whatsapp-btn" onclick="sendReminders()">تذكير غير المجيبين</button>
+        <button class="btn" id="messageBtn" onclick="openMessageModal()">إرسال رسالة</button>
+      </div>
+      <div class="table-container">
+        <table id="students-table">
+          <thead>
+            <tr>
+              <th>م</th>
+              <th>الاسم</th>
+              <th>اسم المستخدم</th>
+              <th>رقم الهاتف</th>
+              <th>الحالة</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="studentsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- شاشة التحميل -->
+    <div class="loader" id="loader">جاري التحميل...</div>
+  </div>
+
+  <!-- نافذة عرض إجابات الطالب -->
+  <div class="modal" id="answerModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalStudentName">إجابات الطالب: أحمد</h2>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- نافذة إرسال الرسالة -->
+  <div class="modal" id="messageModal">
+    <div class="modal-content message-modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-paper-plane"></i> إرسال رسالة</h2>
+        <button class="modal-close" onclick="closeMessageModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="messageForm">
+          <div style="margin-bottom: 1.2rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;"><i class="fas fa-users-cog"></i> نوع المستلم</label>
+            <select id="recipientType" required style="width: 100%; padding: 0.7rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-size: 0.9rem;">
+              <option value="specific">طالب محدد</option>
+              <option value="group" selected>جميع الطلاب في الفرقة</option>
+              <option value="all">جميع الطلاب في النظام</option>
+            </select>
+          </div>
+          <div id="specificUserField" style="margin-bottom: 1.2rem; display: none;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;"><i class="fas fa-user-graduate"></i> اختر الطالب</label>
+            <select id="specificUserSelect" style="width: 100%; padding: 0.7rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-size: 0.9rem;">
+              <option value="">جاري التحميل...</option>
+            </select>
+          </div>
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;"><i class="fas fa-comment-dots"></i> الرسالة</label>
+            <textarea id="messageText" rows="5" placeholder="اكتب رسالتك هنا..." required
+                      style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 0.5rem; resize: vertical; font-family: 'Cairo', sans-serif;"></textarea>
+          </div>
+          <div style="text-align: left; margin-top: 1rem; display: flex; gap: 0.8rem; justify-content: flex-end;">
+            <button type="button" class="btn" style="background: #6c757d;" onclick="closeMessageModal()">
+              <i class="fas fa-times"></i> إلغاء
+            </button>
+            <button type="submit" class="btn" style="background: var(--accent-color); color: #000;">
+              <span id="sendSpinner" style="display: none;"><i class="fas fa-spinner fa-spin"></i></span>
+              <span id="sendText"><i class="fas fa-paper-plane"></i> إرسال</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase و Excel -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="script/h.js"></script>
+</body>
+</html>

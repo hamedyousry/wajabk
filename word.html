@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mr-Hamed Yosry">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content=" واجبك ">
+  <meta property="og:description" content="نظام إدارة المستخدمين بسهولة وفعالية">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/1pfADEnGklJi0anW7xGBMLWCRUQ34SvMj=w1200">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_AR">
+
+  <!-- Favicon -->
+  <link rel="icon" href="poto/3.png" type="image/png">
+
+  <title>تحويل ورد إلى أسئلة إلكترونية</title>
+  <!-- خطوط وأيقونات -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+  <link rel="stylesheet" href="style/word.css">
+</head>
+<body>
+  <!-- الشريط العلوي -->
+  <div class="navbar">
+    <div class="navbar-container">
+      <button class="hamburger" onclick="toggleNav()">☰</button>
+      <div class="navbar-links" id="navbarLinks">
+        <a href="user-naw.html">الرئيسية</a>
+        <a href="view-users.html">ادارة المستخدمين</a>
+        <a href="uu.html">اضافة الواجبات</a>
+        <a href="word.html" class="active">اضافة الاسئلة وورد</a>
+        <a href="manage_lectures_and_questions.html">عرض المحاضرات وتعديلها</a>
+        <a href="send_lecture.html">ارسال الواجب</a>
+          <a href="h.html">معاينة الواجب</a>
+        <a href="subscriptions.html">تجديد الاشتراك </a>
+        <a href="bot.html">بوت الطلاب</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="profaul.html" class="user-icon">
+          <i class="fa-solid fa-circle-user fa-bounce"></i>
+        </a>
+        <button class="theme-toggle-btn" onclick="toggleTheme()">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-text">الوضع الليلي</span>
+        </button>
+        <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+      </div>
+    </div>
+  </div>
+  <!-- زر الإشعارات -->
+  <div class="notification-container">
+    <button class="notification-bell" onclick="toggleNotifications()">
+      🔔
+      <span class="notification-badge" id="notification-count">0</span>
+    </button>
+    <div class="notification-box" id="notification-box">
+      <div class="notification-header">
+        <span>الإشعارات</span>
+        <button class="clear-all-btn" onclick="clearAllNotifications()">مسح الكل</button>
+      </div>
+      <div id="notification-list"></div>
+    </div>
+  </div>
+  <!-- نافذة الاشتراك -->
+  <div id="subscription-block">
+    <h2>❌ انتهت صلاحية اشتراكك</h2>
+    <p>للأسف، انتهت الفترة التجريبية أو اشتراكك.</p>
+    <p>للاستمرار في استخدام الكورس، يرجى تجديد الاشتراك.</p>
+    <button class="renew-btn" onclick="renewSubscription()">تجديد الاشتراك</button>
+  </div>
+  <!-- المحتوى الرئيسي -->
+  <div class="container">
+    <header>
+      <h1>📄 تحويل ورد إلى أسئلة إلكترونية</h1>
+      <p class="subtitle">انسخ نص المحاضرة من ملف ورد وحوّله تلقائيًا إلى أسئلة على الموقع</p>
+    </header>
+    <div class="instructions">
+      <h3>📌 التعليمات</h3>
+      <ol>
+        <li><strong>[ESSAY]</strong>: اكتب تحته كل الأسئلة المقالية</li>
+        <li><strong>[MULTIPLE_CHOICE]</strong>: السؤال ثم 3 خيارات، الإجابة الصحيحة تبدأ بـ <code>=الإجابة</code></li>
+        <li><strong>[TRUE_FALSE]</strong>: السؤال =صح أو =خطأ</li>
+        <li><strong>[IMAGE] https://...</strong>: ضع هذا السطر قبل أي سؤال لإضافة صورة له</li>
+      </ol>
+      <p><strong>ملاحظة:</strong> استخدم روابط مباشرة للصور. إذا كانت من جوجل درايف، استخدم: <br><code>https://drive.google.com/uc?export=view&id=1p-6uTY1oE5-qhD1LxWxL5IcJ5MSZ5T-4</code></p>
+    </div>
+    <div class="group-buttons">
+      <button class="group-btn" onclick="selectGroup('الفرقة الأولى', this)">الفرقة الأولى</button>
+      <button class="group-btn" onclick="selectGroup('الفرقة الثانية', this)">الفرقة الثانية</button>
+      <button class="group-btn" onclick="selectGroup('الفرقة الثالثة', this)">الفرقة الثالثة</button>
+      <button class="group-btn" onclick="selectGroup('الفرقة الرابعة', this)">الفرقة الرابعة</button>
+    </div>
+    <div class="controls">
+      <input type="text" id="lectureName" placeholder="اسم المحاضرة">
+      <label class="upload-btn">
+        📎 اختر ملف ورد
+        <input type="file" id="wordFileInput" accept=".docx" style="display: none;" onchange="handleFileUpload()">
+      </label>
+      <button class="download-btn" onclick="downloadTemplate()">📄 تنزيل قالب وورد</button>
+      <button id="uploadBtn" onclick="convertAndUpload()" disabled>🔄 تحويل ورفع</button>
+    </div>
+    <textarea id="docText" placeholder="الصق هنا نص الأسئلة من ملف الوورد..."></textarea>
+    <div class="success" id="successMessage">تم رفع الأسئلة بنجاح!</div>
+    <div class="error-message" id="error">خطأ في الرفع</div>
+    <div class="loading" id="loading">جاري المعالجة...</div>
+    <div id="previewSection" style="display: none;">
+      <h3>📊 معاينة الأسئلة</h3>
+      <div id="preview"></div>
+      <div style="text-align: center; margin: 1rem 0;">
+        <span>مقالية: <strong id="essayCount">0</strong></span>
+        <span style="margin: 0 1rem;">اختيار من متعدد: <strong id="mcCount">0</strong></span>
+        <span>صح أو خطأ: <strong id="tfCount">0</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <!-- مكتبة قراءة ملفات Word -->
+  <script src="https://cdn.jsdelivr.net/npm/mammoth/mammoth.browser.min.js"></script>
+  <script src="script/word.js"></script>
+</body>
+</html>

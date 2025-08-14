@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="منصة تعليمية متخصصة الواجبات والامتحانات" />
+  <meta name="author" content="Wajabk Team" />
+  <meta name="theme-color" content="#1A3C6D" />
+
+<meta name="author" content="Mr-Hamed Yosry">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content=" واجبك ">
+  <meta property="og:description" content="نظام إدارة المستخدمين بسهولة وفعالية">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/1pfADEnGklJi0anW7xGBMLWCRUQ34SvMj=w1200">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_AR">
+
+  <!-- Website Title -->
+  <title>Wajabk</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="poto/3.png" type="image/png">
+
+
+  <!-- Tajawal Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Firebase SDK (مهم للتحقق من تسجيل الدخول) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+  <style>
+    :root {
+      /* Light Mode Colors */
+      --primary: #1A3C6D;
+      --accent: #FFD700;
+      --accent-light: #FFE766;
+      --text-dark: #1E1E1E;
+      --text-light: #FFFFFF;
+      --bg-light: #F8FAFC;
+      --card-light: #FFFFFF;
+      --glass-bg-light: rgba(255, 255, 255, 0.9);
+      --glass-border-light: rgba(200, 200, 200, 0.3);
+      --gradient: linear-gradient(to right, #F8FAFC, #E6F0FA);
+      --gradient-accent: linear-gradient(90deg, #FFD700, #FFC107, #FFCA28);
+
+      /* Dark Mode Colors */
+      --dark-bg: #00040F;
+      --dark-card-bg: #0d111b;
+      --dark-text-color: #ffeeee;
+      --dark-secondary-text: #ffffff;
+      --dark-border: #262932;
+      --glass-bg: rgba(13, 17, 27, 0.8);
+      --glass-border: rgba(38, 41, 50, 0.5);
+      --accent-color: #FFD700;
+      --accent-hover: #b0f000;
+      --error-dark: #FF6B6B;
+      --success-dark: #00D68F;
+      --warning-color: #FFC107;
+      --warning-dark: #FFD54F;
+
+      /* General Styles */
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.2);
+      --transition: all 0.3s ease-in-out;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--gradient);
+      color: var(--text-dark);
+      min-height: 100vh;
+      transition: var(--transition);
+      overflow-x: hidden;
+    }
+
+    body.dark-mode {
+      background: var(--dark-bg);
+      color: var(--dark-text-color);
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+      background: var(--glass-bg-light);
+      border-bottom: 1px solid var(--glass-border-light);
+      padding: 1rem 2rem;
+      transition: var(--transition);
+    }
+
+    body.dark-mode .navbar {
+      background: var(--glass-bg);
+      border-bottom: 1px solid var(--dark-border);
+    }
+
+    .navbar-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    body.dark-mode .logo {
+      color: var(--accent-color);
+    }
+
+    .logo img {
+      height: 60px;
+      transition: var(--transition);
+    }
+
+    body.dark-mode .logo:hover img {
+      border-color: var(--accent-hover);
+      filter: brightness(1.1);
+    }
+
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent);
+      color: var(--primary);
+      padding: 0.6rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    body.dark-mode .theme-toggle {
+      background: var(--accent-color);
+      color: var(--dark-text-color);
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+      background: var(--accent-light);
+    }
+
+    body.dark-mode .theme-toggle:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Main Content */
+    .main-container {
+      max-width: 1280px;
+      margin: 7rem auto 3rem;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    body.dark-mode .hero h1 {
+      color: var(--dark-text-color);
+    }
+
+    .hero h3 {
+      font-size: 1.2rem;
+      color: var(--text-dark);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+    }
+
+    body.dark-mode .hero h3 {
+      color: var(--dark-secondary-text);
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 0.9rem 2rem;
+      background: var(--gradient-accent);
+      color: var(--primary);
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    body.dark-mode .btn-primary {
+      background: var(--accent-color);
+      color: var(--dark-text-color);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      background: var(--accent-light);
+    }
+
+    body.dark-mode .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .card {
+      background: var(--card-light);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      text-align: center;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+      animation: slideUp 0.5s ease-in-out;
+      border: 1px solid var(--glass-border-light);
+    }
+
+    body.dark-mode .card {
+      background: var(--dark-card-bg);
+      color: var(--dark-text-color);
+      border: 1px solid var(--dark-border);
+    }
+
+    @keyframes slideUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card i {
+      font-size: 3rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    body.dark-mode .card i {
+      color: var(--accent-color);
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: var(--primary);
+    }
+
+    body.dark-mode .card h3 {
+      color: var(--accent-color);
+    }
+
+    .card p {
+      color: #4A5568;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    body.dark-mode .card p {
+      color: var(--dark-secondary-text);
+    }
+
+    /* Floating Icons */
+    .floating-icons {
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      z-index: 1000;
+    }
+
+    .floating-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--glass-bg-light);
+      backdrop-filter: blur(8px);
+      border-radius: 50%;
+      border: 1px solid var(--glass-border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    body.dark-mode .floating-icon {
+      background: var(--glass-bg);
+      border: 1px solid var(--dark-border);
+      color: var(--accent-color);
+    }
+
+    .floating-icon:hover {
+      transform: scale(1.15);
+      background: var(--accent);
+      color: var(--primary);
+    }
+
+    body.dark-mode .floating-icon:hover {
+      background: var(--accent-hover);
+      color: var(--dark-text-color);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      margin-top: 4rem;
+      background: var(--glass-bg-light);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--glass-border-light);
+      color: var(--text-dark);
+    }
+
+    body.dark-mode footer {
+      background: var(--glass-bg);
+      border-top: 1px solid var(--dark-border);
+      color: var(--dark-text-color);
+    }
+
+    footer .social-icons {
+      margin: 1.5rem 0;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    footer .social-icons a {
+      font-size: 1.5rem;
+      color: var(--text-dark);
+      transition: var(--transition);
+    }
+
+    body.dark-mode footer .social-icons a {
+      color: var(--dark-text-color);
+    }
+
+    footer .social-icons a:hover {
+      color: var(--accent);
+    }
+
+    body.dark-mode footer .social-icons a:hover {
+      color: var(--accent-hover);
+    }
+
+    footer p {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    body.dark-mode footer p {
+      color: var(--dark-secondary-text);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero h3 {
+        font-size: 1rem;
+      }
+
+      .card {
+        max-width: 320px;
+        width: 100%;
+      }
+
+      .floating-icons {
+        bottom: 1rem;
+        left: 1rem;
+      }
+
+      .floating-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+      }
+
+      .btn-primary {
+        padding: 0.8rem 1.8rem;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="#" class="logo">
+        <img src="poto/0.svg" alt="شعار Wajabk" />
+      </a>
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+        <span>الوضع الليلي</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <section class="hero">
+      <h1>منصة واجبك تُحقق أحلامك التعليمية</h1>
+      <h3>منصة ذكية توفر واجباتك، محاضراتك، ودعمًا فنيًا مباشرًا.</h3>
+      <a href="login.html" class="btn-primary">ابدأ الآن</a>
+    </section>
+
+    <section class="cards">
+      <article class="card">
+        <i class="fas fa-book-open"></i>
+        <h3>مكتبة رقمية</h3>
+        <p>مكتبة شاملة تضم كل المراجع والكتب الدراسية بسهولة وسرعة.</p>
+      </article>
+      <article class="card">
+        <i class="fa-solid fa-file-word"></i>
+        <h3>واجباتك</h3>
+        <p>أضف واجباتك بأسهل الطرق.</p>
+      </article>
+      <article class="card">
+        <i class="fas fa-robot"></i>
+        <h3>دعم ذكي</h3>
+        <p>دعم فني متاح 24 ساعة لمساعدتك.</p>
+      </article>
+    </section>
+  </main>
+
+  <!-- Floating Icons -->
+  <aside class="floating-icons">
+    <a href="about.html" class="floating-icon" title="عن Wajabk">
+      <i class="fas fa-circle-info"></i>
+    </a>
+    <a href="support.html" class="floating-icon" title="الدعم الفني">
+      <i class="fas fa-headset"></i>
+    </a>
+  </aside>
+
+  <!-- Footer -->
+  <footer>
+    <div class="social-icons">
+      <a href="https://www.facebook.com/theWajabk" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://t.me/theWajabk" target="_blank"><i class="fab fa-telegram"></i></a>
+      <a href="https://twitter.com/the_Wajabk?s=09" target="_blank"><i class="fab fa-twitter"></i></a>
+    </div>
+    <p>&copy; 2025 Wajabk. صُنع بحب للطلاب .</p>
+  </footer>
+
+  <script>
+    // --- تهيئة Firebase ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyCEAM6Mo5wCK4c_0w9M_xHfGQbRnhXQXNY",
+      authDomain: "boot-al-abtal.firebaseapp.com",
+      databaseURL: "https://boot-al-abtal-default-rtdb.firebaseio.com",
+      projectId: "boot-al-abtal",
+      storageBucket: "boot-al-abtal.firebasestorage.app",
+      messagingSenderId: "963942129622",
+      appId: "1:963942129622:web:a23e17e9dc8f30cb5fce77"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // --- التحقق من تسجيل الدخول عند تحميل الصفحة ---
+    window.addEventListener("DOMContentLoaded", () => {
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          // إذا كان المستخدم مسجل دخول، حوّله إلى user-naw.html
+          console.log("المستخدم مسجل دخول:", user.uid);
+          localStorage.setItem("isLoggedIn", "true"); // حفظ الحالة
+          window.location.href = "user-naw.html";
+        } else {
+          // إذا لم يكن مسجل دخول، لا يحدث شيء
+          console.log("لا يوجد مستخدم مسجل دخول");
+        }
+      });
+    });
+
+    // --- نظام التبديل بين الوضع الليلي والنهاري ---
+    const themeToggle = document.getElementById('themeToggle');
+    const icon = themeToggle.querySelector('i');
+    const text = themeToggle.querySelector('span');
+
+    if (localStorage.getItem('dark-mode') === 'true') {
+      enableDarkMode();
+    }
+
+    function enableDarkMode() {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('dark-mode', 'true');
+      icon.className = 'fas fa-sun';
+      text.textContent = 'الوضع النهاري';
+    }
+
+    function disableDarkMode() {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('dark-mode', 'false');
+      icon.className = 'fas fa-moon';
+      text.textContent = 'الوضع الليلي';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.contains('dark-mode') ? disableDarkMode() : enableDarkMode();
+    });
+  </script>
+</body>
+</html>

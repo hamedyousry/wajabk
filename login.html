@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mr-Hamed Yosry">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content=" واجبك ">
+  <meta property="og:description" content="نظام إدارة المستخدمين بسهولة وفعالية">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/1pfADEnGklJi0anW7xGBMLWCRUQ34SvMj=w1200">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_AR">
+
+  <!-- Website Title -->
+  <title>Wajabk</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="poto/3.png" type="image/png">
+
+  
+  <!-- منع التخزين المؤقت (مهم جدًا) -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <!-- خطوط وأيقونات -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="style/login.css">
+ 
+</head>
+<body>
+  <!-- قسم تسجيل الدخول -->
+  <div class="container">
+    <div id="login-section">
+      <h2>تسجيل الدخول</h2>
+      <button class="google-btn" onclick="signInWithGoogle()">
+        تسجيل الدخول باستخدام Google
+        <i class="fa-brands fa-google"></i>
+      </button>
+      <div class="divider">أو</div>
+      <label for="email">البريد الإلكتروني</label>
+      <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني">
+      <div class="forgot">
+        <a href="#" onclick="resetPassword()">نسيت كلمة المرور؟</a>
+      </div>
+      <label for="password">كلمة المرور</label>
+      <input type="password" id="password" placeholder="أدخل كلمة المرور">
+      <button class="btn" onclick="login()">تسجيل الدخول</button>
+      <div class="signup">
+        ليس لديك حساب؟ <a href="#" onclick="showRegister()">إنشاء حساب جديد</a>
+      </div>
+      <p id="error" class="error"></p>
+    </div>
+
+    <!-- نموذج إنشاء حساب عادي -->
+    <div id="register-form" style="display: none;">
+      <h2>إنشاء حساب جديد</h2>
+      <label for="full-name">الاسم الكامل</label>
+      <input type="text" id="full-name" placeholder="أدخل اسمك الكامل">
+      <label for="phone">رقم الهاتف</label>
+      <div class="phone-input">
+        <select id="country-code">
+          <option value="+20">+20 🇪🇬</option>
+          <option value="+966">+966 🇸🇦</option>
+          <option value="+971">+971 🇦🇪</option>
+          <option value="+962">+962 🇯🇴</option>
+          <option value="+963">+963 🇸🇾</option>
+          <option value="+212">+212 🇲🇦</option>
+          <option value="+216">+216 🇹🇳</option>
+          <option value="+961">+961 🇱🇧</option>
+        </select>
+        <input type="tel" id="phone" placeholder="1091528121">
+      </div>
+      <label for="register-email">البريد الإلكتروني</label>
+      <input type="email" id="register-email" placeholder="أدخل بريدك الإلكتروني">
+      <label for="register-password">كلمة المرور</label>
+      <input type="password" id="register-password" placeholder="أنشئ كلمة مرور (6 أحرف على الأقل)">
+      <div class="terms">
+        <input type="checkbox" id="agree-terms"> 
+        <label for="agree-terms">أوافق على <a href="#" style="color:#C6FF00;">شروط الاستخدام</a> و<a href="#" style="color:#C6FF00;">سياسة الخصوصية</a></label>
+      </div>
+      <button class="btn" onclick="register()">إنشاء الحساب</button>
+      <div class="divider">أو</div>
+      <button class="google-btn" onclick="signInWithGoogle()">
+        إنشاء حساب باستخدام Google
+        <i class="fa-brands fa-google"></i>
+      </button>
+      <div class="signup">
+        لديك حساب بالفعل؟ <a href="#" onclick="showLogin()">تسجيل الدخول</a>
+      </div>
+      <p id="register-error" class="error"></p>
+    </div>
+
+    <!-- نموذج إكمال البيانات بعد تسجيل الدخول بـ Google -->
+    <div id="google-details-form" style="display: none;">
+      <h2>أكمل بياناتك</h2>
+      <p style="text-align: center; color: var(--dark-secondary-text); margin-bottom: 1rem; font-size: 0.9rem;">
+        من فضلك أدخل اسمك الكامل ورقم هاتفك لاستكمال التسجيل
+      </p>
+      <label for="google-name">الاسم الكامل</label>
+      <input type="text" id="google-name" placeholder="أدخل اسمك الكامل">
+
+      <label for="google-phone">رقم الهاتف</label>
+      <div class="phone-input">
+        <select id="google-country-code">
+          <option value="+20">+20 🇪🇬</option>
+          <option value="+966">+966 🇸🇦</option>
+          <option value="+971">+971 🇦🇪</option>
+          <option value="+962">+962 🇯🇴</option>
+          <option value="+963">+963 🇸🇾</option>
+          <option value="+212">+212 🇲🇦</option>
+          <option value="+216">+216 🇹🇳</option>
+          <option value="+961">+961 🇱🇧</option>
+        </select>
+        <input type="tel" id="google-phone" placeholder="1091528121">
+      </div>
+
+      <button class="btn" onclick="completeGoogleRegistration()">متابعة</button>
+      <div class="signup">
+        <a href="#" onclick="showLogin()">العودة</a>
+      </div>
+      <p id="google-error" class="error"></p>
+    </div>
+  </div>
+
+  <!-- قسم اختيار الخطة -->
+  <div id="subscription-section">
+    <h3>اختر خطة الاستخدام</h3>
+    <div class="plans">
+      <div class="plan" onclick="selectPlan(this, 'trial', 7, 20)">
+        <h4>تجربة مجانية</h4>
+        <div class="price">7 أيام</div>
+        <small>مثالية لتجربة الموقع</small>
+        <ul class="features">
+          <li>✅ حتى <strong>20 طلاب</strong></li>
+          <li>✅ إدارة المستخدمين</li>
+          <li>✅ إرسال واجبات</li>
+          <li>✅ إشعارات مباشرة</li>
+          <li>❌ لا يوجد دعم فني</li>
+          <li>❌ لا يمكن تصدير أكثر من مرة</li>
+        </ul>
+        <button class="btn">اختيار</button>
+      </div>
+      <div class="plan" onclick="selectPlan(this, 'monthly', 30, 20)">
+        <div class="popular-badge">الأكثر شيوعًا</div>
+        <h4>اشتراك شهري</h4>
+        <div class="price">60 جنيه</div>
+        <small>مثالية للمجموعات الصغيرة</small>
+        <ul class="features">
+          <li>✅ حتى <strong>20 طالبًا</strong></li>
+          <li>✅ إدارة كاملة للمستخدمين</li>
+          <li>✅ إرسال واجبات ومحاضرات</li>
+          <li>✅ تصدير البيانات (Excel)</li>
+          <li>✅ دعم فني أساسي</li>
+          <li>❌ لا يوجد نسخ احتياطي تلقائي</li>
+        </ul>
+        <button class="btn">اختيار</button>
+      </div>
+      <div class="plan" onclick="selectPlan(this, 'yearly', 365, 100)">
+        <div class="save-badge">وفر 50%</div>
+        <h4>اشتراك سنوي</h4>
+        <div class="price">1800 جنيه</div>
+        <small>مثالي للمدربين والمعاهد</small>
+        <ul class="features">
+          <li>✅ حتى <strong>100 طالب</strong></li>
+          <li>✅ إدارة متقدمة للمستخدمين</li>
+          <li>✅ إرسال تلقائي للواجبات</li>
+          <li>✅ تصدير ونسخ احتياطي تلقائي</li>
+          <li>✅ دعم فني مميز (24/7)</li>
+          <li>✅ إشعارات متقدمة (واتساب + إيميل)</li>
+          <li>✅ تقارير أداء شهرية</li>
+        </ul>
+        <button class="btn">اختيار</button>
+      </div>
+    </div>
+    <div id="payment-details" class="payment-details" style="display:none;">
+      <strong>طريقة الدفع: فودافون كاش</strong><br>
+      <strong>رقم الحساب:</strong> +201091528121<br>
+      <strong>الاسم:</strong> Mr.Hamed Yosry<br>
+      <small>احفظ الرقم وأرسل صورة التحويل بعد الدفع.</small>
+    </div>
+    <button class="confirm-btn" onclick="confirmSubscription()">تأكيد وبدء الاستخدام</button>
+    
+    <!-- زر الدعم الإضافي -->
+    <div style="text-align: center; margin-top: 1rem;">
+      <button class="support-btn" onclick="contactSupport()">
+        <i class="fas fa-headset"></i> تواصل مع الدعم
+      </button>
+    </div>
+  </div>
+
+  <!-- نافذة الدفع -->
+  <div class="payment-modal" id="payment-modal">
+    <div class="payment-box">
+      <h3>تفعيل الحساب</h3>
+      <p>أدخل رقم عملية الدفع (رقم التحويل) من فودافون كاش</p>
+      <input type="text" id="payment-code" placeholder="رقم التحويل">
+      <p id="payment-note" style="color: #FFC107; font-size: 0.85rem; margin: 1rem 0;">
+        ⚠️ تأكد أن رقم التحويل ينتمي للمبلغ المطلوب
+      </p>
+      <p id="payment-error" class="error" style="margin: 0.5rem 0; display: none;"></p>
+      <button class="btn" onclick="verifyPayment()">تأكيد</button>
+      <button class="btn back-btn" onclick="closePaymentModal()">إلغاء</button>
+      <button class="support-btn" id="support-btn" style="display:none;" onclick="contactSupport()">
+        <i class="fas fa-headset"></i> تواصل مع الدعم
+      </button>
+    </div>
+  </div>
+
+  <!-- شاشة التحميل -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">جاري تسجيل الدخول...</div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="script/login.js"></script>
+</body>
+</html>

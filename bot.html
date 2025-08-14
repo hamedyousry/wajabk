@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="بيانات بوت الطلاب - جلب تلقائي حسب المستخدم">
+  <meta charset="UTF-8">
+  <meta name="author" content="Mr-Hamed Yosry">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content=" واجبك ">
+  <meta property="og:description" content="نظام إدارة المستخدمين بسهولة وفعالية">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/1pfADEnGklJi0anW7xGBMLWCRUQ34SvMj=w1200">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_AR">
+
+  <!-- Website Title -->
+  <title>Wajabk</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="poto/3.png" type="image/png">
+
+  <title>بيانات البوت - لوحة التحكم</title>
+  <!-- خط Cairo للعربية -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style/bot.css">
+</head>
+<body>
+  <!-- الشريط العلوي -->
+  <div class="navbar">
+    <div class="navbar-container">
+      <button class="hamburger" onclick="toggleNav()">☰</button>
+      <div class="navbar-links" id="navbarLinks">
+        <a href="user-naw.html">الرئيسية</a>
+        <a href="view-users.html">ادارة المستخدمين</a>
+        <a href="uu.html">اضافة الواجبات</a>
+        <a href="word.html">اضافة الاسئلة وورد</a>
+        <a href="manage_lectures_and_questions.html">عرض المحاضرات وتعديلها</a>
+        <a href="send_lecture.html">ارسال الواجب</a>
+        <a href="h.html">معاينة الواجب</a>
+        <a href="subscriptions.html">تجديد الاشتراك</a>
+        <a href="bot.html" class="active">بوت الطلاب</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="profaul.html" class="user-icon">
+          <i class="fa-solid fa-circle-user fa-bounce"></i>
+        </a>
+        <button class="theme-toggle-btn" onclick="toggleTheme()">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-text">الوضع الليلي</span>
+        </button>
+        <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- المحتوى الرئيسي -->
+  <div class="container">
+    <h1>معلومات بوت الطلاب</h1>
+
+    <!-- زر إرسال طلب بوت -->
+    <button id="addBotBtn" class="btn" style="background: #673AB7; color: white; margin: 1rem auto; display: block;">
+      <i class="fas fa-plus"></i> إرسال طلب إضافة بوت
+    </button>
+
+    <div id="loader" class="loader">
+      <i class="fas fa-spinner fa-spin"></i> جارٍ تحميل البيانات...
+    </div>
+
+    <div id="error" class="error" style="display: none;"></div>
+
+    <div id="botCard" class="bot-card" style="display: none;">
+      <div class="bot-info">
+        <div class="bot-icon">
+          <i class="fab fa-telegram-plane"></i>
+        </div>
+        <h2 class="bot-name" id="botName">...</h2>
+        <span class="bot-username" id="botUsername">...</span>
+      </div>
+
+      <div class="details">
+        <div class="detail-item">
+          <div class="detail-icon">
+            <i class="fas fa-user-cog"></i>
+          </div>
+          <span class="detail-label">المطوّر</span>
+          <span class="detail-value" id="botDeveloper">...</span>
+        </div>
+        <div class="detail-item">
+          <div class="detail-icon">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+          <span class="detail-label">تاريخ الإنشاء</span>
+          <span class="detail-value" id="botDate">...</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-visit" id="visitBtn" disabled>
+          <i class="fab fa-telegram-plane"></i> افتح البوت
+        </button>
+        <button class="btn btn-copy" id="copyBtn" disabled>
+          <i class="fas fa-copy"></i> نسخ المعرف
+        </button>
+      </div>
+    </div>
+
+    <!-- نموذج إرسال طلب بوت -->
+    <div id="botFormContainer" style="display: none; margin: 2rem auto; padding: 1.5rem; background: var(--card-bg); border-radius: 1rem; border: 1px solid var(--border-color); box-shadow: 0 4px 12px var(--shadow-color);">
+      <h2 style="text-align: center; margin-bottom: 1.5rem; color: var(--primary-color);">إرسال طلب إضافة بوت</h2>
+      
+      <form id="botForm">
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-color);">اسم البوت</label>
+          <input type="text" id="formBotName" required 
+                 style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-family: 'Cairo', sans-serif; background: #fff;" 
+                 placeholder="مثل: بوت الطلاب">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-color);">المعرف @</label>
+          <input type="text" id="formBotUsername" required 
+                 style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-family: 'Cairo', sans-serif; background: #fff;" 
+                 placeholder="مثل: student_bot">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-color);">توكن البوت</label>
+          <input type="text" id="formBotToken" required 
+                 style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-family: 'Cairo', sans-serif; background: #fff;" 
+                 placeholder="123456:ABC-DEF123...">
+        </div>
+
+        <div style="text-align: center; margin-top: 1.5rem;">
+          <button type="submit" class="btn" style="background: var(--success-color); color: white;">
+            <i class="fas fa-paper-plane"></i> إرسال الطلب
+          </button>
+          <button type="button" id="cancelBtn" class="btn" style="background: var(--error-color); color: white; margin: 1rem;">
+            <i class="fas fa-times"></i> إلغاء
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="script/bot.js"></script>
+</body>
+</html>

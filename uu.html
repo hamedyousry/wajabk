@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mr-Hamed Yosry">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content=" واجبك ">
+  <meta property="og:description" content="نظام إدارة المستخدمين بسهولة وفعالية">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/1pfADEnGklJi0anW7xGBMLWCRUQ34SvMj=w1200">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_AR">
+
+
+  <!-- Favicon -->
+  <link rel="icon" href="poto/3.png" type="image/png">
+
+  <title>إضافة أسئلة خطوة بخطوة</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style/uu.css">
+</head>
+<body>
+  <!-- الشريط العلوي -->
+  <div class="navbar">
+    <div class="navbar-container">
+      <button class="hamburger" onclick="toggleNav()">☰</button>
+      <div class="navbar-links" id="navbarLinks">
+        <a href="user-naw.html">الرئيسية</a>
+        <a href="view-users.html">ادارة المستخدمين</a>
+        <a href="uu.html">اضافة الواجبات</a>
+        <a href="word.html">اضافة الاسئلة وورد</a>
+        <a href="manage_lectures_and_questions.html">عرض المحاضرات وتعديلها</a>
+        <a href="send_lecture.html">ارسال الواجب</a>
+          <a href="h.html">معاينة الواجب</a>
+        <a href="subscriptions.html">تجديد الاشتراك </a>
+        <a href="bot.html">بوت الطلاب</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="profaul.html" class="user-icon">
+          <i class="fa-solid fa-circle-user fa-bounce"></i>
+        </a>
+        <button class="theme-toggle-btn" onclick="toggleTheme()">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-text">الوضع الليلي</span>
+        </button>
+        <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- زر الإشعارات -->
+  <div class="notification-container">
+    <button class="notification-bell" onclick="toggleNotifications()">
+      🔔
+      <span class="notification-badge" id="notification-count">0</span>
+    </button>
+    <div class="notification-box" id="notification-box">
+      <div class="notification-header">
+        <span>الإشعارات</span>
+        <button class="clear-all-btn" onclick="clearAllNotifications()">مسح الكل</button>
+      </div>
+      <div id="notification-list"></div>
+    </div>
+  </div>
+
+  <!-- المحتوى الرئيسي -->
+  <div class="container">
+    <h1>📝 إضافة أسئلة خطوة بخطوة</h1>
+    <div id="loading" class="loading">جاري التحقق من اشتراكك...</div>
+    <div id="steps">
+      <!-- الخطوة 1 -->
+      <div class="step active" id="step1">
+        <h2>1. اختيار الفرقة واسم المحاضرة</h2>
+        <label for="groupSelect">اختر الفرقة:</label>
+        <select id="groupSelect">
+          <option value="">اختر الفرقة</option>
+          <option value="الفرقة الأولى">الفرقة الأولى</option>
+          <option value="الفرقة الثانية">الفرقة الثانية</option>
+          <option value="الفرقة الثالثة">الفرقة الثالثة</option>
+          <option value="الفرقة الرابعة">الفرقة الرابعة</option>
+        </select>
+        <label for="lectureName">اسم المحاضرة:</label>
+        <input type="text" id="lectureName" placeholder="أدخل اسم المحاضرة">
+        <div class="nav-buttons">
+          <div></div>
+          <button class="next-btn" onclick="nextStep(1)">التالي</button>
+        </div>
+      </div>
+
+      <!-- الخطوة 2 -->
+      <div class="step" id="step2">
+        <h2>2. إضافة أسئلة مقالة</h2>
+        <div id="essayQuestions"></div>
+        <button class="add-question-btn" onclick="addEssayQuestion()">+ إضافة سؤال مقالة</button>
+        <div class="nav-buttons">
+          <button class="prev-btn" onclick="prevStep()">السابق</button>
+          <button class="next-btn" onclick="nextStep(2)">التالي</button>
+        </div>
+      </div>
+
+      <!-- الخطوة 3 -->
+      <div class="step" id="step3">
+        <h2>3. إضافة أسئلة اختيار من متعدد</h2>
+        <div id="mcQuestions"></div>
+        <button class="add-question-btn" onclick="addMCQuestion()">+ إضافة سؤال اختيار من متعدد</button>
+        <div class="nav-buttons">
+          <button class="prev-btn" onclick="prevStep()">السابق</button>
+          <button class="next-btn" onclick="nextStep(3)">التالي</button>
+        </div>
+      </div>
+
+      <!-- الخطوة 4 -->
+      <div class="step" id="step4">
+        <h2>4. إضافة أسئلة صح أو خطأ</h2>
+        <div id="tfQuestions"></div>
+        <button class="add-question-btn" onclick="addTFQuestion()">+ إضافة سؤال صح أو خطأ</button>
+        <div class="nav-buttons">
+          <button class="prev-btn" onclick="prevStep()">السابق</button>
+          <button class="next-btn" onclick="submitAllQuestions()">إتمام الإرسال</button>
+        </div>
+      </div>
+    </div>
+    <div id="success-message">تم حفظ جميع الأسئلة بنجاح!</div>
+  </div>
+
+  <!-- رسالة انتهاء الاشتراك -->
+  <div id="subscription-block">
+    <h2>❌ انتهت صلاحية اشتراكك</h2>
+    <p></p>
+    <button class="renew-btn" onclick="renewSubscription()">تجديد الاشتراك</button>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="script/uu.js"></script>
+</body>
+</html>

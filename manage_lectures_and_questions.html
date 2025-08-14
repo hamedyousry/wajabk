@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Mr-Hamed Yosry">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content=" واجبك ">
+  <meta property="og:description" content="نظام إدارة المستخدمين بسهولة وفعالية">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/1pfADEnGklJi0anW7xGBMLWCRUQ34SvMj=w1200">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_AR">
+
+  
+  <!-- Favicon -->
+  <link rel="icon" href="poto/3.png" type="image/png">
+
+  <title>عرض المحاضرات والأسئلة</title>
+  <!-- خطوط وأيقونات -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style/manage_lectures_and_questions.css">
+</head>
+<body>
+  <!-- الشريط العلوي -->
+  <div class="navbar">
+    <div class="navbar-container">
+      <button class="hamburger" onclick="toggleNav()">☰</button>
+      <div class="navbar-links" id="navbarLinks">
+        <a href="user-naw.html">الرئيسية</a>
+        <a href="view-users.html">ادارة المستخدمين</a>
+        <a href="uu.html">اضافة الواجبات</a>
+        <a href="word.html">اضافة الاسئلة وورد</a>
+        <a href="manage_lectures_and_questions.html" class="active">عرض المحاضرات وتعديلها</a>
+        <a href="send_lecture.html">ارسال الواجب</a>
+          <a href="h.html">معاينة الواجب</a>
+        <a href="subscriptions.html">تجديد الاشتراك </a>
+        <a href="bot.html">بوت الطلاب</a>
+      </div>
+      <div class="navbar-actions">
+        <a href="profaul.html" class="user-icon">
+          <i class="fa-solid fa-circle-user fa-bounce"></i>
+        </a>
+        <button class="theme-toggle-btn" onclick="toggleTheme()">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-text">الوضع الليلي</span>
+        </button>
+        <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+      </div>
+    </div>
+  </div>
+  <!-- زر الإشعارات -->
+  <div class="notification-container">
+    <button class="notification-bell" onclick="toggleNotifications()">
+      🔔
+      <span class="notification-badge" id="notification-count">0</span>
+    </button>
+    <div class="notification-box" id="notification-box">
+      <div class="notification-header">
+        <span>الإشعارات</span>
+        <button class="clear-all-btn" onclick="clearAllNotifications()">مسح الكل</button>
+      </div>
+      <div id="notification-list"></div>
+    </div>
+  </div>
+  <!-- المحتوى الرئيسي -->
+  <div class="container">
+    <h1>📚 عرض المحاضرات والأسئلة</h1>
+    <div class="search-container">
+      <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن محاضرة...">
+      <button class="search-btn" onclick="searchLectures()">بحث</button>
+    </div>
+    <div class="group-buttons">
+      <button class="group-btn" onclick="loadLectures('الفرقة الأولى', this)">الفرقة الأولى</button>
+      <button class="group-btn" onclick="loadLectures('الفرقة الثانية', this)">الفرقة الثانية</button>
+      <button class="group-btn" onclick="loadLectures('الفرقة الثالثة', this)">الفرقة الثالثة</button>
+      <button class="group-btn" onclick="loadLectures('الفرقة الرابعة', this)">الفرقة الرابعة</button>
+    </div>
+    <div id="lecturesSection" class="lecture-list"></div>
+  </div>
+  <!-- مودال تعديل المحاضرة -->
+  <div id="lectureModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>تعديل اسم المحاضرة</h2>
+        <span class="close-btn" onclick="closeLectureModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="editLectureName" class="modal-input" placeholder="اسم المحاضرة">
+      </div>
+      <div class="modal-footer">
+        <button class="save-btn" onclick="saveLectureChanges()">حفظ التغييرات</button>
+        <button class="delete-btn" onclick="closeLectureModal()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+  <!-- مودال تعديل جميع الأسئلة دفعة واحدة -->
+  <div id="bulkEditModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>تعديل جميع أسئلة المحاضرة</h2>
+        <span class="close-btn" onclick="closeBulkEditModal()">&times;</span>
+      </div>
+      <div class="modal-body" id="bulkEditModalBody">
+        <!-- سيتم ملء المحتوى هنا ديناميكيًا -->
+      </div>
+      <div class="modal-footer">
+        <button class="save-btn" onclick="saveAllQuestions()">حفظ جميع التعديلات</button>
+        <button class="delete-btn" onclick="closeBulkEditModal()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="script/manage_lectures_and_questions.js"></script>
+</body>
+</html>
