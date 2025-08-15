@@ -1,4 +1,4 @@
-    // --- تنظيف رقم الهاتف المصري بأي شكل ---
+ // --- تنظيف رقم الهاتف المصري ---
     function cleanEgyptianPhone(phone) {
       const digits = phone.replace(/\D/g, '');
       if (digits.length >= 10) {
@@ -40,7 +40,7 @@
       document.getElementById("loading-overlay").style.display = "none";
     }
 
-    // --- تحقق من الاشتراك وتوجيه المستخدم ---
+    // --- تحقق من الاشتراك ---
     function checkSubscriptionAndRedirect(uid) {
       db.ref(`subscriptions/${uid}`).once("value")
         .then(snapshot => {
@@ -298,7 +298,6 @@
         return;
       }
 
-      // ✅ تنفيذ مباشر للخطة المجانية (تحفظ البيانات في teachers)
       if (selectedPlan.type === 'trial') {
         createAccountAndSubscription(tempUserData, selectedPlan);
       } else {
@@ -309,9 +308,18 @@
 
     // --- التحقق من الدفع ---
     function verifyPayment() {
-      const paymentCode = document.getElementById("payment-code-modal").value.trim();
+      const paymentCodeInput = document.getElementById("payment-code");
       const errorEl = document.getElementById("payment-error");
       errorEl.style.display = "none";
+
+      if (!paymentCodeInput) {
+        console.error("حقل إدخال الكود غير موجود");
+        errorEl.textContent = "حدث خطأ داخلي";
+        errorEl.style.display = "block";
+        return;
+      }
+
+      const paymentCode = paymentCodeInput.value.trim();
 
       if (!paymentCode) {
         errorEl.textContent = "الرجاء إدخال رقم التحويل";
@@ -359,7 +367,7 @@
         phone: tempUserData?.phone || ""
       };
 
-      const paymentCode = document.getElementById("payment-code-modal")?.value.trim() || "لم يتم الإدخال";
+      const paymentCode = document.getElementById("payment-code")?.value.trim() || "لم يتم الإدخال";
       const planNames = { trial: "تجربة مجانية", monthly: "اشتراك شهري", yearly: "اشتراك سنوي" };
       const planLabel = planNames[selectedPlan?.type] || "غير محدد";
 
@@ -380,7 +388,7 @@
       window.open(url, '_blank');
     }
 
-    // --- إنشاء الحساب والاشتراك + إضافة بيانات المُعلّم ---
+    // --- إنشاء الحساب والاشتراك ---
     function createAccountAndSubscription(userData, plan) {
       const now = new Date();
       now.setHours(0, 0, 0, 0);
