@@ -19,8 +19,7 @@
   <!-- Favicon -->
   <link rel="icon" href="poto/3.png" type="image/png">
 
-  
-  <!-- منع التخزين المؤقت (مهم جدًا) -->
+  <!-- منع التخزين المؤقت -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -28,8 +27,7 @@
   <!-- خطوط وأيقونات -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="style/login.css">
- 
+  <link rel="stylesheet" href="style/login.css">
 </head>
 <body>
   <!-- قسم تسجيل الدخول -->
@@ -127,7 +125,7 @@
   </div>
 
   <!-- قسم اختيار الخطة -->
-  <div id="subscription-section">
+  <div id="subscription-section" style="display: none;">
     <h3>اختر خطة الاستخدام</h3>
     <div class="plans">
       <div class="plan" onclick="selectPlan(this, 'trial', 7, 20)">
@@ -183,7 +181,7 @@
       <small>احفظ الرقم وأرسل صورة التحويل بعد الدفع.</small>
     </div>
     <button class="confirm-btn" onclick="confirmSubscription()">تأكيد وبدء الاستخدام</button>
-    
+
     <!-- زر الدعم الإضافي -->
     <div style="text-align: center; margin-top: 1rem;">
       <button class="support-btn" onclick="contactSupport()">
@@ -193,7 +191,7 @@
   </div>
 
   <!-- نافذة الدفع -->
-  <div class="payment-modal" id="payment-modal">
+  <div class="payment-modal" id="payment-modal" style="display: none;">
     <div class="payment-box">
       <h3>تفعيل الحساب</h3>
       <p>أدخل رقم عملية الدفع (رقم التحويل) من فودافون كاش</p>
@@ -222,5 +220,4 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <script src="script/login.js"></script>
 </body>
-
 </html>
