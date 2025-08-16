@@ -227,8 +227,8 @@
         const studentCount = usersList.length;
         console.log("عدد طلاب المجموعة:", studentCount);
 
-        // ✅ التحكم في عرض الأزرار إذا كان العدد أقل من 50
-        if (studentCount < 50) {
+        // ✅ التحكم في عرض الأزرار إذا كان العدد اكبر من 50
+        if (studentCount > 50) {
           filterButtons.style.display = 'none';
           exportBtn.style.display = 'none';
           messageBtn.style.display = 'none';
@@ -639,4 +639,5 @@
           document.getElementById('sendSpinner').style.display = 'none';
           document.getElementById('sendText').style.display = 'inline';
         });
+
     });
